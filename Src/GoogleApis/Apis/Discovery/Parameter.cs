@@ -18,13 +18,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Google.Apis.JSON;
+
+using Google.Apis.Json;
 using Google.Apis.Requests;
+
 namespace Google.Apis.Discovery
 {
 	public class Parameter
 	{
-		private JSONDictionary information;
+		private JsonDictionary information;
 
 		public Parameter ()
 		{
@@ -33,31 +35,36 @@ namespace Google.Apis.Discovery
 		public Parameter (KeyValuePair<string, object> kvp)
 		{
 			this.Name = kvp.Key;
-			this.information = kvp.Value as JSONDictionary;
+			this.information = kvp.Value as JsonDictionary;
 			if (this.information == null)
 				throw new ArgumentException ("got no valid dictionary");
 		}
 
 		public string Name { get; private set;}
 
-		public string ParameterType {
-			get { return this.information.GetValueAsNull (ServiceFactory.discovery_parameterType) as string; }
+		public string ParameterType 
+		{
+			get { return this.information.GetValueAsNull (ServiceFactory.ParameterType) as string; }
 		}
 
-		public string Pattern {
-			get { return this.information.GetValueAsNull (ServiceFactory.discovery_pattern) as string; }
+		public string Pattern 
+		{
+			get { return this.information.GetValueAsNull (ServiceFactory.Pattern) as string; }
 		}
 
-		public bool Required {
-			get { return (bool)this.information.GetValueAsNull (ServiceFactory.discovery_required); }
+		public bool Required 
+		{
+			get { return (bool)this.information.GetValueAsNull (ServiceFactory.Required); }
 		}
 
-		public string DefaultValue {
-			get { return this.information.GetValueAsNull (ServiceFactory.discovery_defaultValue) as string; }
+		public string DefaultValue 
+		{
+			get { return this.information.GetValueAsNull (ServiceFactory.DefaultValue) as string; }
 		}
 
-		public string ValueType {
-			get { return this.information.GetValueAsNull (ServiceFactory.discovery_valueType) as string; }
+		public string ValueType 
+		{
+			get { return this.information.GetValueAsNull (ServiceFactory.ValueType) as string; }
 		}
 	}
 }

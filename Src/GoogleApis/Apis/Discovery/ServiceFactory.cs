@@ -19,69 +19,134 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using Google.Apis.JSON;
+using Google.Apis.Json;
 
-namespace Google.Apis.Discovery {
-
-  public class ServiceFactory {
-    internal const string discovery_versionInfo = "versionInfo";
-    internal const string discovery_baseUrl = "baseUrl";
-    internal const string discovery_rpcUrl = "rpcUrl";
-    internal const string discovery_resources = "resources";
-    internal const string discovery_methods = "methods";
-    internal const string discovery_pathUrl = "pathUrl";
-    internal const string discovery_rpcName = "rpcName";
-    internal const string discovery_httpMethod = "httpMethod";
-    internal const string discovery_parameters = "parameters";
-
-    internal const string discovery_parameterType = "parameterType";
-    internal const string discovery_pattern = "pattern";
-    internal const string discovery_required = "required";
-    internal const string discovery_defaultValue = "defaultValue";
-    internal const string discovery_valueType = "valueType";
-    
-    
-    private JSONDictionary information;
-    private string name;
-    public ServiceFactory(Stream discovery) {
-      this.information = JSONReader.Parse(discovery) as JSONDictionary;
-      if (this.information == null)
-        throw new ArgumentException("Discovery document in invalid form");
-
-      // discard the data element
-      this.information = this.information["data"] as JSONDictionary;
-      if (this.information == null)
-        throw new ArgumentException("Discovery document has no data element");
-      if (this.information.Count != 1)
-        throw new ArgumentException("More than one element found");
-      foreach (KeyValuePair<string, object> kvp in this.information) {
-        this.name = kvp.Key;
-        this.information = kvp.Value as JSONDictionary;
-      }
-      if (this.information == null)
-        throw new ArgumentException("Discovery document has no service dictionary");
-	  /*
-      if (this.information.Count >= 2)
-        throw new ArgumentException("Discovery document has too many children beneath the service name");
-
-      this.information = this.information["versionInfo"] as JSONDictionary;
-      if (this.information == null)
-        throw new ArgumentException("Discovery document has no versionInfo for the service");*/
+namespace Google.Apis.Discovery 
+{
+    public interface IServiceFactory
+    {
+        
+        IService GetService(string version);
     }
-
-
-
-    public Service GetService(string version) {
-
-      // now find the right versioninfo set
-      JSONDictionary js = this.information[version] as JSONDictionary;
-      if (js == null)
-        throw new ArgumentException("Did not find version: " + version + " in the discovery document");
-
-      Service s = new Service(version, this.name, js);
-      return s;
-    }
-
     
-  }
+    public class ServiceFactory
+    {
+        internal const string VersionInfo = "versionInfo";
+        
+        internal const string RpcUrl = "rpcUrl";
+        internal const string Resources = "resources";
+        internal const string Methods = "methods";
+        internal const string RpcName = "rpcName";
+        internal const string HttpMethod = "httpMethod";
+        internal const string Parameters = "parameters";
+    
+        internal const string ParameterType = "parameterType";
+        internal const string Pattern = "pattern";
+        internal const string Required = "required";
+        internal const string DefaultValue = "defaultValue";
+        internal const string ValueType = "valueType";
+
+        public static IServiceFactory CreateServiceFactory(Stream discovery, DiscoveryVersion version, IFactoryParameter param)
+        {
+            JsonDictionary information = JsonReader.Parse(discovery) as JsonDictionary;
+            
+            switch(version){
+                case DiscoveryVersion.Version_0_1:
+                    return new ServiceFactoryDiscoveryV0_1(information);
+                case DiscoveryVersion.Version_0_2:
+                    return new ServiceFactoryDiscoveryV0_2(information, (FactoryV_0_2Parameter)param);
+                case DiscoveryVersion.Version_0_3:
+                default:
+                    throw new NotSupportedException("The Version "+version +" is not supported");
+            }
+        }
+        
+        public interface IFactoryParameter
+        {
+        }
+        
+        public class FactoryV_0_2Parameter:IFactoryParameter
+        {
+            public FactoryV_0_2Parameter():this(null, null)
+            {
+                ;
+            }
+            public FactoryV_0_2Parameter(string serverUrl, string baseUrl)
+            {
+                this.ServerUrl = serverUrl;
+                this.BaseUrl = baseUrl;
+            }
+            
+            public string ServerUrl{get;set;}
+            public string BaseUrl{get;set;}
+        }
+    
+        internal class ServiceFactoryDiscoveryV0_2 : IServiceFactory
+        {
+            internal const string BaseUrl = "restBasePath";
+            internal const string PathUrl = "restPath";
+            
+            private readonly JsonDictionary information;
+            private readonly FactoryV_0_2Parameter param;
+            private readonly string name;
+            public ServiceFactoryDiscoveryV0_2(JsonDictionary discovery, FactoryV_0_2Parameter param) 
+            {
+                this.information = discovery;
+                this.name = information["name"].ToString();                
+                this.param = param;
+            }
+            
+            public IService GetService(string version) 
+            {
+                return new ServiceV0_2(version, this.name, param, information);
+            }
+        }
+        
+    	internal class ServiceFactoryDiscoveryV0_1 :IServiceFactory
+    	{
+            internal const string BaseUrl = "baseUrl";
+            internal const string PathUrl = "pathUrl";
+            
+    	    private JsonDictionary information;
+    	    private string name;
+    	    public ServiceFactoryDiscoveryV0_1(JsonDictionary discovery) 
+            {
+    	      this.information = discovery;
+    	      if (this.information == null)
+    	        throw new ArgumentException("Discovery document in invalid form");
+    	
+    	      // if present discard the data element
+              this.information = this.information["data"] as JsonDictionary;
+                if (this.information == null)
+    	        throw new ArgumentException("Discovery document has no data element");
+    	      if (this.information.Count != 1)
+    	        throw new ArgumentException("More than one element found");
+    	      foreach (KeyValuePair<string, object> kvp in this.information) {
+    	        this.name = kvp.Key;
+    	        this.information = kvp.Value as JsonDictionary;
+    	      }
+    	      if (this.information == null)
+    	        throw new ArgumentException("Discovery document has no service dictionary");
+    		  /*
+    	      if (this.information.Count >= 2)
+    	        throw new ArgumentException("Discovery document has too many children beneath the service name");
+    	
+    	      this.information = this.information["versionInfo"] as JSONDictionary;
+    	      if (this.information == null)
+    	        throw new ArgumentException("Discovery document has no versionInfo for the service");*/
+    	    }
+    	
+    	    public IService GetService(string version) 
+    		{
+    			// now find the right versioninfo set
+    			JsonDictionary js = this.information[version] as JsonDictionary;
+    			if (js == null)
+    			{
+    				throw new ArgumentException("Did not find version: " + version + " in the discovery document");
+    			}
+    			
+    			return new ServiceV01(version, this.name, js);
+    	    }
+    	  }	
+    }
 }

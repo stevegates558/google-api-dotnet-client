@@ -18,54 +18,104 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Google.Apis.JSON;
+
+using Google.Apis.Json;
 using Google.Apis.Requests;
+
 namespace Google.Apis.Discovery
 {
-	public class Method
+    public interface IMethod
+    {
+        string Name {get;set;}
+        string RestPath{get;} 
+        string RpcName {get;}
+        string HttpMethod {get;}
+        Dictionary<string, Parameter> Parameters{get;} 
+    }
+    
+	internal abstract class BaseMethod:IMethod
 	{
-		private JSONDictionary information;
-		public string Name {get;set;}
-		private Dictionary<string, Parameter> parameters;
-
-		public Method ()
-		{
-		}
-
-		internal Method (KeyValuePair<string, object> kvp)
+		internal protected JsonDictionary information;
+		
+		internal protected Dictionary<string, Parameter> parameters;
+        
+		internal BaseMethod (KeyValuePair<string, object> kvp)
 		{
 			this.Name = kvp.Key;
-			this.information = kvp.Value as JSONDictionary;
+			this.information = kvp.Value as JsonDictionary;
 			if (this.information == null)
 				throw new ArgumentException ("got no valid dictionary");
 		}
 
-		public string RestPath {
-			get { return this.information[ServiceFactory.discovery_pathUrl] as string; }
+        public string Name {get;set;}
+        
+		public abstract string RestPath {get;}
+
+		public string RpcName 
+		{
+			get { return this.information[ServiceFactory.RpcName] as string; }
 		}
 
-		public string RpcName {
-			get { return this.information[ServiceFactory.discovery_rpcName] as string; }
+		public string HttpMethod 
+		{
+			get { return this.information.GetValueAsNull (ServiceFactory.HttpMethod) as string; }
 		}
 
-		public string HttpMethod {
-			get { return this.information.GetValueAsNull (ServiceFactory.discovery_httpMethod) as string; }
-		}
-
-		public Dictionary<string, Parameter> Parameters {
+		public Dictionary<string, Parameter> Parameters 
+		{
 			get {
-				if (this.parameters == null) {
-					JSONDictionary js = this.information[ServiceFactory.discovery_parameters] as JSONDictionary;
-					if (js != null) {
-						this.parameters = new Dictionary<string, Parameter> ();
-						foreach (KeyValuePair<string, object> kvp in js) {
-							Parameter p = new Parameter (kvp);
-							this.parameters.Add (kvp.Key, p);
-						}
-					}
+				if (this.parameters == null) 
+				{
+					this.parameters = FetchParameters ();
 				}
 				return this.parameters;
 			}
 		}
+        
+        private Dictionary<string, Parameter> FetchParameters ()
+        {
+            if( this.information.ContainsKey(ServiceFactory.Parameters) == false)
+            {
+                return new Dictionary<string, Parameter>(0);
+            }
+            
+            JsonDictionary js = this.information[ServiceFactory.Parameters] as JsonDictionary;
+            if (js == null) 
+            {
+                return new Dictionary<string, Parameter>(0);                
+            }
+            
+            var parameters = new Dictionary<string, Parameter> ();
+            foreach (KeyValuePair<string, object> kvp in js) 
+            {
+                Parameter p = new Parameter (kvp);
+                parameters.Add (kvp.Key, p);
+            }
+            return parameters;
+        }
 	}
+    
+    internal class MethodV_0_1:BaseMethod
+    {
+        public MethodV_0_1(KeyValuePair<string, object> kvp):base(kvp)
+        {
+        }
+        
+        public override string RestPath 
+        {
+            get { return this.information[ServiceFactory.ServiceFactoryDiscoveryV0_1.PathUrl] as string; }
+        }
+        
+    }
+    internal class MethodV_0_2:BaseMethod
+    {
+        public MethodV_0_2(KeyValuePair<string, object> kvp):base(kvp)
+        {
+        }
+        
+        public override string RestPath 
+        {
+            get { return this.information[ServiceFactory.ServiceFactoryDiscoveryV0_2.PathUrl] as string; }
+        }
+    }
 }

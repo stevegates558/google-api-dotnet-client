@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using Google.Apis.Discovery;
-using Google.Apis.JSON;
+using Google.Apis.Json;
 
 namespace Google.Apis.Tests.Requests
 {
@@ -30,7 +30,7 @@ namespace Google.Apis.Tests.Requests
 		[Test()]
 		public void ConstructorTest ()
 		{
-			Method m = new Method();
+			IMethod m = new MockMethod();
 			m.Name = "Test";
 			
             Assert.IsInstanceOf<MethodValidator>(new MethodValidator(m, new Dictionary<string, string>()));
@@ -39,8 +39,8 @@ namespace Google.Apis.Tests.Requests
 		[Test()]
 		public void ValidateRegexTest ()
 		{
-			Method m = new Method();
-			var dict = new JSONDictionary { 
+			IMethod m = new MockMethod();
+			var dict = new JsonDictionary { 
 				{ "name" , "test" },
 				{ "pattern", ".+" }
 			};
@@ -57,8 +57,8 @@ namespace Google.Apis.Tests.Requests
 		[Test()]
 		public void ValidateRegexEmptyNeedsDataTest ()
 		{
-			Method m = new Method();
-			var dict = new JSONDictionary { 
+			IMethod m = new MockMethod();
+			var dict = new JsonDictionary { 
 				{ "name" , "test" },
 				{ "pattern", ".+" }
 			};

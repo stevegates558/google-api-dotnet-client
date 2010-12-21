@@ -8,7 +8,7 @@
     <ProjectGuid>{9A8AA9EF-6904-43D8-8A26-0AB62069C2DC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Google.Apis.Tests</RootNamespace>
-    <AssemblyName>GoogleApis.Tests</AssemblyName>
+    <AssemblyName>Google.Apis.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -31,8 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
-    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" />
+    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Third Party\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -42,9 +47,11 @@
     <Compile Include="StreamDiscoveryDeviceTests.cs" />
     <Compile Include="StringDiscoveryDeviceTests.cs" />
     <Compile Include="Requests\MethodValidator.cs" />
-    <Compile Include="JSON\JSONReaderTests.cs" />
-    <Compile Include="JSON\JSONTokenTests.cs" />
     <Compile Include="JSON\TokenStreamTest.cs" />
+    <Compile Include="JSON\JsonTokenTests.cs" />
+    <Compile Include="JSON\JsonReaderTests.cs" />
+    <Compile Include="Apis\Discovery\ServiceFactoryTest.cs" />
+    <Compile Include="Requests\MockMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleApis\GoogleApis.csproj">
@@ -56,5 +63,7 @@
   <ItemGroup>
     <Folder Include="Requests\" />
     <Folder Include="JSON\" />
+    <Folder Include="Apis\" />
+    <Folder Include="Apis\Discovery\" />
   </ItemGroup>
 </Project>

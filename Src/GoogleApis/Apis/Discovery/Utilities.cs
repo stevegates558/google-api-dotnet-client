@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Google.Apis.JSON;
+using Google.Apis.Json;
 using Google.Apis.Requests;
 namespace Google.Apis.Discovery
 {
@@ -27,7 +27,8 @@ namespace Google.Apis.Discovery
 		public static TValue GetValueAsNull<TKey, TValue> (this IDictionary<TKey, TValue> data, TKey key)
 		{
 			TValue result;
-			if (!data.TryGetValue (key, out result)) {
+			if (!data.TryGetValue (key, out result)) 
+			{
 				return default(TValue);
 			}
 			return result;

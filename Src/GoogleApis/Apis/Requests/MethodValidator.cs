@@ -27,10 +27,10 @@ namespace Google.Apis
 	/// </summary>
 	public class MethodValidator
 	{
-		public Method CurrentMethod {get; private set;}
-		public Dictionary<string, string> Parameters {get; private set;}
+		public IMethod CurrentMethod {get; private set;}
+		public IDictionary<string, string> Parameters {get; private set;}
 		
-		public MethodValidator (Method method, Dictionary<string, string> parameters)
+		public MethodValidator (IMethod method, IDictionary<string, string> parameters)
 		{
 			this.CurrentMethod = method;
 			this.Parameters = parameters;
@@ -109,6 +109,9 @@ namespace Google.Apis
 		/// A <see cref="System.Boolean"/>
 		/// </returns>
 		public bool ValidateRegex(Parameter param, string paramValue) {
+			if(param.Pattern == null){
+				return true; // No Validation so anything is valid.
+			}
 			string pattern = param.Pattern;
 			string stringValue = paramValue;
 			

@@ -19,48 +19,54 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using Google.Apis.JSON;
+using Google.Apis.Json;
 using Google.Apis.Requests;
 
 namespace Google.Apis.Discovery
 {
 	// represents a single version of a service
-	public class Service
+	internal abstract class BaseService:IService
 	{
-		private JSONDictionary information;
+		protected internal JsonDictionary information;
+		private Dictionary<string, IResource> resources;
+
 		public string Name {get; private set;}
 		public string Version {get; private set;}
 		
-		private Dictionary<string, Method> serviceMethods;
-		private Dictionary<string, Resource> resources;
 
-		internal Service (string version, string name, JSONDictionary js)
+		internal BaseService (string version, string name, JsonDictionary js)
 		{
 			this.Version = version;
 			this.Name = name;
 			this.information = js;
 		}
 
-		private Service ()
+		private BaseService ()
 		{
 		}
 
-		public Uri BaseUri {
-			get { return new Uri (this.information[ServiceFactory.discovery_baseUrl] as string); }
+        public abstract DiscoveryVersion DiscoveryVersion{get;}
+		public abstract Uri BaseUri {get;}
+        public abstract IResource CreateResource(KeyValuePair<string, object> kvp);
+
+		public Uri RpcUri 
+		{
+			get { return new Uri (this.information[ServiceFactory.RpcUrl] as string); }
 		}
 
-		public Uri RpcUri {
-			get { return new Uri (this.information[ServiceFactory.discovery_rpcUrl] as string); }
-		}
-
-		public Dictionary<string, Resource> Resources {
-			get {
-				if (this.resources == null) {
-					JSONDictionary js = this.information[ServiceFactory.discovery_resources] as JSONDictionary;
-					if (js != null) {
-						this.resources = new Dictionary<string, Resource> ();
-						foreach (KeyValuePair<string, object> kvp in js) {
-							Resource r = new Resource (kvp);
+		public IDictionary<string, IResource> Resources 
+		{
+			get 
+			{
+				if (this.resources == null) 
+				{
+					JsonDictionary js = this.information[ServiceFactory.Resources] as JsonDictionary;
+					if (js != null) 
+					{
+						this.resources = new Dictionary<string, IResource> ();
+						foreach (KeyValuePair<string, object> kvp in js) 
+						{
+							IResource r = CreateResource(kvp);
 							this.resources.Add (kvp.Key, r);
 						}
 					}
@@ -78,7 +84,7 @@ namespace Google.Apis.Discovery
 		/// <returns>
 		/// A <see cref="Request"/>
 		/// </returns>
-		public Request CreateRequest (string resource, string methodName)
+		public IRequest CreateRequest (string resource, string methodName)
 		{
 			var method = this.Resources[resource].Methods[methodName];
 			var request = Request.CreateRequest(this, method);
@@ -86,4 +92,65 @@ namespace Google.Apis.Discovery
 			return request;
 		}
 	}
+    
+    internal class ServiceV01 : BaseService
+    {
+        internal ServiceV01 (string version, string name, JsonDictionary js):
+            base(version, name, js)
+        {
+            
+        }
+        
+        public override DiscoveryVersion DiscoveryVersion {
+            get { return DiscoveryVersion.Version_0_1;}
+        }
+ 
+        
+        public override Uri BaseUri 
+        {
+            get { return new Uri (
+                    this.information[ServiceFactory.ServiceFactoryDiscoveryV0_1.BaseUrl] as string); }
+        }
+        
+        public override IResource CreateResource (KeyValuePair<string, object> kvp)
+        {
+            return new ResourceV_0_1(kvp);
+        }
+
+    }
+    
+    internal class ServiceV0_2 : BaseService
+    {
+        private string ServerUrl{get;set;}
+        private readonly Uri baseUri;
+        internal ServiceV0_2 (string version, string name, ServiceFactory.FactoryV_0_2Parameter param, JsonDictionary js):
+            base(version, name, js)
+        {
+            this.ServerUrl = param.ServerUrl;
+            if(param.BaseUrl != null && param.BaseUrl.Length > 0)
+            {
+                this.baseUri = new Uri(param.BaseUrl);
+            } 
+            else
+            {
+                this.baseUri = new Uri (this.ServerUrl +
+                    this.information[ServiceFactory.ServiceFactoryDiscoveryV0_2.BaseUrl] as string);
+            }
+        }
+        
+        public override DiscoveryVersion DiscoveryVersion 
+        {
+            get {return DiscoveryVersion.Version_0_2;}
+        }
+        
+        public override Uri BaseUri 
+        { 
+            get {return baseUri;}
+        }
+        
+        public override IResource CreateResource (KeyValuePair<string, object> kvp)
+        {
+            return new ResourceV_0_2(kvp);
+        }
+    }
 }
