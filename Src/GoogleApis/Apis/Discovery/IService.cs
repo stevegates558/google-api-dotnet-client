@@ -32,7 +32,7 @@ namespace Google.Apis.Discovery
     /// <seealso cref="ISchema"/>
 	public interface IService : IResourceContainer
 	{
-		/// <summary> The version of this serivce </summary>
+		/// <summary> The version of this service </summary>
 		string Version {get;}
 		Uri BaseUri {get;}
 		Uri RpcUri {get;}

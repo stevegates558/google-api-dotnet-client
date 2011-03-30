@@ -73,7 +73,7 @@
     <Compile Include="Decorator\SchemaDecorator\StandardPropertyFieldDecoratorTest.cs" />
     <Compile Include="Decorator\SchemaDecorator\ObjectInternalClassProvider.cs" />
     <Compile Include="Decorator\ServiceDecorator\SchemaAwearExecuteMethodDecoratorTest.cs" />
-    <Compile Include="Decorator\ServiceDecorator\NewtonsoftObjectToJsonTest.cs" />
+    <Compile Include="Decorator\ServiceDecorator\NewtonsoftJsonSerializerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleApis.Tools.CodeGen\GoogleApis.Tools.CodeGen.csproj">

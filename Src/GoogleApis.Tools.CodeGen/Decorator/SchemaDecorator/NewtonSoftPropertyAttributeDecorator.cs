@@ -20,13 +20,13 @@ namespace Google.Apis.Tools.CodeGen.Decorator.SchemaDecorator
         
         private static readonly CodeTypeReference jsonPropertyAttribute = new CodeTypeReference(typeof(JsonPropertyAttribute));
         
-        public void DecoratInternalClass(CodeTypeDeclaration typeDeclaration, 
+        public void DecorateInternalClass(CodeTypeDeclaration typeDeclaration, 
                 string name, JsonSchema schema, INestedClassProvider internalClassProvider)
         {
             AddAttributesToAllProperties(name, schema, typeDeclaration);
         }
         
-        public void DecoratClass (CodeTypeDeclaration typeDeclaration, ISchema schema, INestedClassProvider internalClassProvider)
+        public void DecorateClass (CodeTypeDeclaration typeDeclaration, ISchema schema, INestedClassProvider internalClassProvider)
         {
             AddAttributesToAllProperties(schema.Name, schema.SchemaDetails, typeDeclaration);
         }

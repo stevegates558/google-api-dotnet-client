@@ -28,6 +28,6 @@ namespace Google.Apis.Tools.CodeGen.Decorator.SchemaDecorator
     /// <seealso cref="ISchemaDecorator"/> 
     public interface INestedClassSchemaDecorator
     {
-        void DecoratInternalClass(CodeTypeDeclaration typeDeclaration, string name, JsonSchema schema, INestedClassProvider internalClassProvider);
+        void DecorateInternalClass(CodeTypeDeclaration typeDeclaration, string name, JsonSchema schema, INestedClassProvider internalClassProvider);
     }
 }
