@@ -64,6 +64,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apis\Authentication\OAuth2Authenticator.cs" />
+    <Compile Include="Apis\Authentication\OAuth3LeggedAuthenticator.cs" />
     <Compile Include="Apis\Util\StandardResponse.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Apis\Discovery\Service.cs" />
@@ -80,7 +82,6 @@
     <Compile Include="Apis\Requests\Request.cs" />
     <Compile Include="Apis\Discovery\Method.cs" />
     <Compile Include="Apis\Discovery\Resource.cs" />
-    <Compile Include="Apis\Authentication\Authentication.cs" />
     <Compile Include="Apis\Authentication\ICreateHttpRequest.cs" />
     <Compile Include="Apis\Authentication\HttpRequestFactory.cs" />
     <Compile Include="Apis\Authentication\Authenticator.cs" />
