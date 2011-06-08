@@ -19,6 +19,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Google.Apis.Discovery;
 using Google.Apis.Testing;
 using Google.Apis.Tools.CodeGen.Decorator.ResourceContainerDecorator;
@@ -61,7 +62,7 @@ namespace Google.Apis.Tools.CodeGen
                      new StandardConstructorResourceDecorator(),
                      new StandardMethodResourceDecorator(),
                      new Log4NetResourceDecorator(),
-                     new DictonaryOptionalParameterResourceDecorator(new DefaultEnglishCommentCreator())
+                     new DictionaryOptionalParameterResourceDecorator(new DefaultEnglishCommentCreator())
                  }).AsReadOnly();
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace Google.Apis.Tools.CodeGen
                              true, true, new StandardMethodResourceDecorator.DefaultObjectTypeProvider(schemaNamespace),
                              new DefaultEnglishCommentCreator()),
                          new Log4NetResourceDecorator(),
-                         new DictonaryOptionalParameterResourceDecorator(new DefaultEnglishCommentCreator())
+                         new DictionaryOptionalParameterResourceDecorator(new DefaultEnglishCommentCreator())
                      }).AsReadOnly
                     ();
         }
@@ -271,13 +272,18 @@ namespace Google.Apis.Tools.CodeGen
         {
             foreach (var res in resourceContainer.Resources.Values)
             {
-                // Create a class for the resource
+                // Create the current list of used names.
+                IEnumerable<string> usedNames = resourceContainer.Resources.Keys;
+
+                // Create a class for the resource.
                 logger.DebugFormat("Adding Resource {0}", res.Name);
                 var resourceGenerator = new ResourceClassGenerator(
-                    res, serviceClassName, resourceNumber, resourceDecorators, resourceContainerGenerator,
-                    resourceContainer.Resources.Keys);
-                clientNamespace.Types.Add(resourceGenerator.CreateClass());
+                    res, serviceClassName, resourceNumber, resourceDecorators, resourceContainerGenerator, usedNames);
+                var generatedClass = resourceGenerator.CreateClass();
+                clientNamespace.Types.Add(generatedClass);
                 resourceNumber++;
+                
+                // Create subresources.
                 resourceNumber = CreateResources(
                     clientNamespace, serviceClassName, res, resourceContainerGenerator, resourceNumber);
             }

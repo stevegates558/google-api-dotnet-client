@@ -85,7 +85,8 @@ namespace Google.Apis.Tools.CodeGen.Decorator.SchemaDecorator
             {
                 fields.Add(
                     GenerateField(
-                        propertyPair.Key, propertyPair.Value, index, internalClassProvider, schema.Properties.Keys));
+                        propertyPair.Key, propertyPair.Value, index, internalClassProvider,
+                        schema.Properties.Keys.Without(propertyPair.Key)));
                 index++;
             }
             return fields;
@@ -104,7 +105,7 @@ namespace Google.Apis.Tools.CodeGen.Decorator.SchemaDecorator
 
             var ret = new CodeMemberField(
                 SchemaDecoratorUtil.GetCodeType(propertySchema, internalClassProvider),
-                SchemaDecoratorUtil.GetFieldName(name, index, otherFieldNames));
+                SchemaDecoratorUtil.GetFieldName(name, otherFieldNames));
             ret.Attributes = MemberAttributes.Private;
 
             return ret;

@@ -56,7 +56,10 @@ namespace Google.Apis.Tools.CodeGen.Generator
                 details = detailCollection[schema.SchemaDetails];
             }
 
-            string className = GeneratorUtils.GetClassName(schema, otherSchemaNames);
+            // Get relevant name collection
+            IEnumerable<string> relevantNames = otherSchemaNames.Without(schema.Name);
+
+            string className = GeneratorUtils.GetClassName(schema, relevantNames);
             var typeDeclaration = new CodeTypeDeclaration(className);
             var nestedClassGenerator = new NestedClassGenerator(typeDeclaration, decorators, "");
             foreach (ISchemaDecorator schemaDecorator in decorators)
