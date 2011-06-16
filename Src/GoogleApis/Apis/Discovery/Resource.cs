@@ -57,8 +57,8 @@ namespace Google.Apis.Discovery
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(IResource));
         private readonly JsonDictionary information;
-        private Dictionary<string, IMethod> methods;
-        private Dictionary<string, IResource> resources;
+        protected Dictionary<string, IMethod> methods;
+        protected Dictionary<string, IResource> resources;
 
         /// <summary>
         /// Creates a new resource for the specified discovery version with the specified name and json dictionary.
