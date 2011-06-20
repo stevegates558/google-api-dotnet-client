@@ -40,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DocumentationFile>GoogleApis.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -48,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DocumentationFile>GoogleApis.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -72,6 +74,8 @@
     <Compile Include="Apis\Authentication\OAuth3LeggedAuthenticator.cs" />
     <Compile Include="Apis\Discovery\Features.cs" />
     <Compile Include="Apis\ISerializer.cs" />
+    <Compile Include="Apis\Requests\ParameterCollection.cs" />
+    <Compile Include="Apis\Util\Repeatable.cs" />
     <Compile Include="Apis\JSON\IJsonSerializer.cs" />
     <Compile Include="Apis\JSON\NewtonsoftJsonSerializer.cs" />
     <Compile Include="Apis\Requests\IResponse.cs" />

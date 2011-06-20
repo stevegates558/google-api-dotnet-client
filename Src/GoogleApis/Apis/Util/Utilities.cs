@@ -314,5 +314,14 @@ namespace Google.Apis.Util
             TypeConverter converter = TypeDescriptor.GetConverter(o);
             return converter.ConvertToString(o);
         }
+        
+        /// <summary>
+        /// Please don't use this unless absolutely nessasery.
+        /// Returns if the current runtime is Mono, this is used to work around different behavior in the runtime.
+        /// </summary>
+        public static bool IsMonoRuntime()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
     }
 }

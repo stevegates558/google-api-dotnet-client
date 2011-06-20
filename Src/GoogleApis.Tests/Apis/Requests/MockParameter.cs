@@ -30,7 +30,8 @@ namespace Google.Apis.Tests.Apis.Requests
         public string Name { get; set; }
         public string ParameterType { get; set; }
         public string Pattern { get; set; }
-        public bool Required { get; set; }
+        public bool IsRequired { get; set; }
+        public bool IsRepeatable { get; set; }
         public string DefaultValue { get; set; }
         public string ValueType { get; set; }
         public string Description { get; set; }
