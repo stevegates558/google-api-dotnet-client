@@ -112,7 +112,21 @@ namespace Google.Apis.Discovery
 
         public Uri BaseUri
         {
-            get { return new Uri(ServerUrl + BasePath); }
+            get
+            {
+                if (ServerUrl.EndsWith("/") && BasePath.StartsWith("/"))
+                {
+                    return new Uri(ServerUrl.Substring(0, ServerUrl.Length - 1) + BasePath);
+                }
+                else if (ServerUrl.EndsWith("/") == false && BasePath.StartsWith("/") == false)
+                {
+                    return new Uri(ServerUrl + "/" + BasePath);
+                }
+                else
+                {
+                    return new Uri(ServerUrl + BasePath);
+                }
+            }
         }
 
         public Uri RpcUri
@@ -243,7 +257,15 @@ namespace Google.Apis.Discovery
             if (HasFeature(Discovery.Features.LegacyDataResponse))
             {
                 // Legacy path (deprecated!)
-                StandardResponse<T> response = Serializer.Deserialize<StandardResponse<T>>(text);
+                StandardResponse<T> response = null;
+                try
+                {
+                    response = Serializer.Deserialize<StandardResponse<T>>(text);
+                }
+                catch(JsonReaderException ex)
+                {
+                    throw new GoogleApiException(this, "Failed to parse response from server as json ["+text+"]", ex);
+                }
 
                 if (response.Error != null)
                 {
@@ -259,7 +281,15 @@ namespace Google.Apis.Discovery
             }
 
             // New path: Deserialize the object directly
-            T result = Serializer.Deserialize<T>(text);
+            T result = default(T);
+            try
+            {
+                result = Serializer.Deserialize<T>(text);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new GoogleApiException(this, "Failed to parse response from server as json [" + text + "]", ex);
+            }
 
             // If this schema/object provides an error container, check it
             if (result is IResponse)
@@ -325,7 +355,7 @@ namespace Google.Apis.Discovery
     /// <summary>
     /// Represents a Service as defined in Discovery V1.0
     /// </summary>
-    public class ServiceV1_0 : BaseService
+    internal class ServiceV1_0 : BaseService
     {
         private const string BasePathField = "basePath";
 
@@ -355,7 +385,7 @@ namespace Google.Apis.Discovery
     /// <summary>
     /// Represents a Service as defined in Discovery V0.3
     /// </summary>
-    public class ServiceV0_3 : BaseService
+    internal class ServiceV0_3 : BaseService
     {
         private const string RestBasePathField = "restBasePath";
 
