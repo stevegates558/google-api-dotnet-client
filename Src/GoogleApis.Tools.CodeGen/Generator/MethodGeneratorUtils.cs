@@ -51,6 +51,11 @@ namespace Google.Apis.Tools.CodeGen.Generator
         /// </summary>
         public static IEnumerable<IParameter> GetAllParametersSorted(this IMethod method)
         {
+            if (method.Parameters == null)
+            {
+                yield break;
+            }
+
             var remainingParameters = new List<IParameter>(method.Parameters.Values);
 
             // First add all parameters in the suggested order.

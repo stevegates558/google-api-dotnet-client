@@ -19,8 +19,8 @@ using System;
 namespace Google.Apis.Util
 {
     /// <summary>
-    /// A attribute which is used to mark a property as a request parameter.
-    /// Allows you to set the formal name of the parameter if it differs from the property name.
+    /// An attribute which is used to specially mark a property for reflective purposes, and (optionally) to assign
+    /// a formal name to the property.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class RequestParameterAttribute : Attribute
@@ -28,7 +28,7 @@ namespace Google.Apis.Util
         private readonly string name;
 
         /// <summary>
-        /// Name/Key of this attribute
+        /// Name/key of this attribute
         /// </summary>
         public string Name { get { return name; }}
 

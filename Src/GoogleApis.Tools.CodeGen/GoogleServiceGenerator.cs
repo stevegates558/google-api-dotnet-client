@@ -21,8 +21,10 @@ using System.Collections.Generic;
 using System.IO;
 using Google.Apis.Discovery;
 using Google.Apis.Testing;
+using Google.Apis.Tools.CodeGen.Decorator;
 using Google.Apis.Tools.CodeGen.Decorator.ResourceContainerDecorator;
 using Google.Apis.Tools.CodeGen.Decorator.ResourceDecorator;
+using Google.Apis.Tools.CodeGen.Decorator.ResourceDecorator.RequestDecorator;
 using Google.Apis.Tools.CodeGen.Decorator.ServiceDecorator;
 using Google.Apis.Tools.CodeGen.Generator;
 using Google.Apis.Util;
@@ -80,6 +82,23 @@ namespace Google.Apis.Tools.CodeGen
                      new StandardExecuteMethodServiceDecorator(),
                      
                  }).AsReadOnly();
+
+        /// <summary>
+        /// List of all request class decorators
+        /// </summary>
+        public static IList<IRequestDecorator> GetSchemaAwareRequestDecorators(string schemaNamespace)
+        {
+            var typeProvider = new DefaultObjectTypeProvider(schemaNamespace);
+
+            return (new List<IRequestDecorator>
+                        {
+                            new ParameterPropertyDecorator(),
+                            new ServiceRequestInheritanceDecorator(typeProvider),
+                            new BodyPropertyDecorator(typeProvider),
+                            new ServiceRequestFieldDecorator(),
+                            new RequestConstructorDecorator(typeProvider) { CreateOptionalConstructor = true },
+                        }).AsReadOnly();
+        }
 
         /// <summary>
         /// List of all schema aware service decorators
@@ -152,6 +171,8 @@ namespace Google.Apis.Tools.CodeGen
         /// </summary>
         public static IList<IResourceDecorator> GetSchemaAwareResourceDecorators(string schemaNamespace)
         {
+            var typeProvider = new DefaultObjectTypeProvider(schemaNamespace);
+
             return
                 (new List<IResourceDecorator>
                      {
@@ -162,8 +183,9 @@ namespace Google.Apis.Tools.CodeGen
                          new StandardConstructorResourceDecorator(),
                          new StandardMethodResourceDecorator(),
                          new StandardMethodResourceDecorator(
-                             true, true, new StandardMethodResourceDecorator.DefaultObjectTypeProvider(schemaNamespace),
+                             true, true, typeProvider,
                              new DefaultEnglishCommentCreator()),
+                         new RequestMethodResourceDecorator(typeProvider) { AddOptionalParameters = true },
                          new Log4NetResourceDecorator(),
                          new DictionaryOptionalParameterResourceDecorator(new DefaultEnglishCommentCreator())
                      }).AsReadOnly
@@ -237,13 +259,16 @@ namespace Google.Apis.Tools.CodeGen
 
             ResourceContainerGenerator resourceContainerGenerator =
                 new ResourceContainerGenerator(resourceContainerDecorators);
+            var requestClassGenerator = new RequestClassGenerator(
+                GetSchemaAwareRequestDecorators(codeClientNamespace + ".Data"));
 
             var serviceClass =
                 new ServiceClassGenerator(service, serviceDecorators, resourceContainerGenerator).CreateServiceClass();
             string serviceClassName = serviceClass.Name;
 
             clientNamespace.Types.Add(serviceClass);
-            CreateResources(clientNamespace, serviceClassName, service, resourceContainerGenerator);
+            CreateResources(
+                clientNamespace, serviceClassName, service, requestClassGenerator, resourceContainerGenerator);
 
             return clientNamespace;
         }
@@ -273,6 +298,7 @@ namespace Google.Apis.Tools.CodeGen
         private void CreateResources(CodeNamespace clientNamespace,
                                      string serviceClassName,
                                      IResourceContainer resourceContainer,
+                                     RequestClassGenerator requestClassGenerator,
                                      ResourceContainerGenerator resourceContainerGenerator)
         {
             foreach (var res in resourceContainer.Resources.Values)
@@ -283,7 +309,8 @@ namespace Google.Apis.Tools.CodeGen
                 // Create a class for the resource.
                 logger.DebugFormat("Adding Resource {0}", res.Name);
                 var resourceGenerator = new ResourceClassGenerator(
-                    res, serviceClassName, resourceDecorators, resourceContainerGenerator, usedNames);
+                    res, serviceClassName, resourceDecorators, requestClassGenerator, resourceContainerGenerator,
+                    usedNames);
                 var generatedClass = resourceGenerator.CreateClass();
                 clientNamespace.Types.Add(generatedClass);
             }
