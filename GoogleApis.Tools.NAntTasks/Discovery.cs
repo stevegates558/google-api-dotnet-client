@@ -1190,7 +1190,7 @@ namespace Google.Apis.Discovery.v1 {
         }
         
         public DiscoveryService() : 
-                this(new Google.Apis.Discovery.DiscoveryService(new Google.Apis.Discovery.CachedWebDiscoveryDevice(new System.Uri(string.Format("https://www.googleapis.com/discovery/v1/apis/{0}/{1}/rest", DiscoveryService.Name, DiscoveryService.Version)))).GetService(DiscoveryService.Version, DiscoveryService.DiscoveryVersionUsed, new Google.Apis.Discovery.FactoryParameterV1_0(new System.Uri(DiscoveryService.BaseUri))), Google.Apis.Authentication.AuthenticatorFactory.GetInstance().GetRegisteredAuthenticator()) {
+                this(new Google.Apis.Discovery.DiscoveryService(new Google.Apis.Discovery.CachedWebDiscoveryDevice(new System.Uri(string.Format("https://www.googleapis.com/discovery/v1/apis/{0}/{1}/rest", DiscoveryService.Name, DiscoveryService.Version)))).GetService(DiscoveryService.DiscoveryVersionUsed, new Google.Apis.Discovery.FactoryParameterV1_0(new System.Uri(DiscoveryService.BaseUri))), Google.Apis.Authentication.AuthenticatorFactory.GetInstance().GetRegisteredAuthenticator()) {
         }
         
         /// <summary>Sets the DeveloperKey which this service uses for all requests</summary>
