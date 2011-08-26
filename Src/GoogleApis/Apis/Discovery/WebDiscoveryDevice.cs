@@ -59,11 +59,15 @@ namespace Google.Apis.Discovery
         public Stream Fetch()
         {
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(DiscoveryUri);
-            request.Timeout = TimeoutInSeconds * 1000;
-            Stream responseData;
 
-            response = (HttpWebResponse) request.GetResponse();
-            responseData = response.GetResponseStream();
+            // The timeout property is only supported on regular .NET.
+#if !SILVERLIGHT
+            request.Timeout = TimeoutInSeconds * 1000;
+#endif
+
+            IAsyncResult async = request.BeginGetResponse(null, null);
+            response = (HttpWebResponse) request.EndGetResponse(async);
+            Stream responseData = response.GetResponseStream();
 
             return responseData;
         }
