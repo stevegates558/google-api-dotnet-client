@@ -106,10 +106,17 @@ namespace Google.Apis.Auth.OAuth2
             // Remove this callback.
             PhoneApplicationFrame rootFrame = Application.Current.RootVisual as PhoneApplicationFrame;
             PhoneApplicationPage rootPage = rootFrame.Content as PhoneApplicationPage;
+
+            // TODO(peleyal): consider removing the listener somewhere else. Because if the auth succeeded we don't
+            // remove the callback.
             rootPage.BackKeyPress -= RootPage_BackKeyPress;
 
             e.Cancel = true;
-            tcsAuthorizationCodeResponse.SetCanceled();
+            if (!tcsAuthorizationCodeResponse.Task.IsCompleted &&
+                !tcsAuthorizationCodeResponse.Task.IsCanceled)
+            {
+                tcsAuthorizationCodeResponse.SetCanceled();
+            }
         }
     }
 }
