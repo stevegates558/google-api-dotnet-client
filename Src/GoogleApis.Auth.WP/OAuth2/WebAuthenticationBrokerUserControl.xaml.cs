@@ -111,10 +111,10 @@ namespace Google.Apis.Auth.OAuth2
             // remove the callback.
             rootPage.BackKeyPress -= RootPage_BackKeyPress;
 
-            e.Cancel = true;
             if (!tcsAuthorizationCodeResponse.Task.IsCompleted &&
                 !tcsAuthorizationCodeResponse.Task.IsCanceled)
             {
+                e.Cancel = true;
                 tcsAuthorizationCodeResponse.SetCanceled();
             }
         }
