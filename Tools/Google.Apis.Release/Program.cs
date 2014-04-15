@@ -234,7 +234,7 @@ namespace Google.Apis.Release
         {
             if (BuildVersion != 0)
             {
-                DefaultRepository.Update(string.Format("{0}.{1}", MajorVersion, MinorVersion));
+                //DefaultRepository.Update(string.Format("{0}.{1}", MajorVersion, MinorVersion));
             }
 
             // if there are incoming changes those changes will be printed, otherwise we can continue in the process
@@ -425,9 +425,8 @@ namespace Google.Apis.Release
             string releaseDir = ContribRepository.Combine(Tag);
 
             // Clear existing directories.
-            DirectoryUtilities.ClearOrCreateDirectory(releaseDir);
             string genDir = Path.Combine(releaseDir, "Generated");
-            Directory.CreateDirectory(genDir);
+            DirectoryUtilities.ClearOrCreateDirectory(genDir);
 
             #region [RELEASE_VERSION]/Generated/Bin
 
@@ -534,7 +533,7 @@ namespace Google.Apis.Release
 
             #endregion
 
-            // open the created change-log and read again the notes (in case the user had modified the file)
+            // Open the created change-log and read again the notes (in case the user had modified the file).
             Process.Start(noteFilePath).WaitForExit();
             notes = File.ReadAllText(noteFilePath);
 
