@@ -953,8 +953,8 @@ namespace Google.Apis.Tests.Apis.Requests
                 DateTime date = new DateTime(2002, 2, 25, 12, 57, 32, 777, DateTimeKind.Utc);
                 request.Min = date;
                 httpRequest = request.CreateRequest();
-                Assert.That(httpRequest.RequestUri, Is.EqualTo(
-                    new Uri("https://build_request_params/restPath0?min_time=2002-02-25T12:57:32.777Z")));
+                Assert.That(httpRequest.RequestUri.ToString(), Is.EqualTo(
+                    new Uri("https://build_request_params/restPath0?min_time=2002-02-25T12:57:32.777Z").ToString()));
             }
         }
 

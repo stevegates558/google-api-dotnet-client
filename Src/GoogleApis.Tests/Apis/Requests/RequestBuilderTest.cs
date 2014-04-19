@@ -213,7 +213,7 @@ namespace Google.Apis.Tests.Apis.Requests
             builder.AddParameter(RequestParameterType.Path, "id", " %va/ue");
 
             var request = builder.CreateRequest();
-            Assert.That(request.RequestUri, Is.EqualTo(new Uri("http://www.example.com/test/%20%25va%2Fue")));
+            Assert.That(request.RequestUri.ToString(), Is.EqualTo(new Uri("http://www.example.com/test/%20%25va%2Fue").ToString()));
         }
 
         /// <summary>Tests a path parameter which contains '?' with query parameter.</summary>
@@ -350,7 +350,7 @@ namespace Google.Apis.Tests.Apis.Requests
                 }
             }
 
-            Assert.That(builder.BuildUri().AbsoluteUri, Is.EqualTo("http://www.example.com/" + expected));
+            Assert.That(builder.BuildUri().ToString(), Is.EqualTo(new Uri("http://www.example.com/" + expected).ToString()));
         }
     }
 }
