@@ -37,7 +37,7 @@ namespace Google.Apis.Tests.Apis.Requests
     [TestFixture]
     public class BatchRequestTest
     {
-        const string ExpectedContentMessage = @"--BOUNDARY
+        static readonly string ExpectedContentMessage = @"--BOUNDARY
 Content-Type: application/http
 
 POST http://sample.com/5?q=20
@@ -58,7 +58,7 @@ Content-Length:  43
 {""etag_key"":""\""200\"""",""name_key"":""Name1-1""}
 
 --BOUNDARY--
-";
+".Replace("\r\n",Environment.NewLine);
         /// <summary>A mock response class.</summary>
         class MockResponse : IDirectResponseSchema
         {
@@ -154,7 +154,7 @@ Content-Length:  43
         /// </summary>
         class BatchMessageHandler : CountableMessageHandler
         {
-            const string ResponseContent = @"--BOUNDARY
+            static readonly string ResponseContent = @"--BOUNDARY
 Content-Type: application/http
 
 HTTP/1.1 200 OK
@@ -172,9 +172,9 @@ Content-Type: application/http
 
 SECOND_RESPONSE
 
---BOUNDARY--";
+--BOUNDARY--".Replace("\r\n",Environment.NewLine);
 
-            const string SuccessfulResponse =
+            static readonly string SuccessfulResponse =
 @"HTTP/1.1 200 OK
 ETag: ""234""
 Content-Type: application/json; charset=UTF-8
@@ -182,9 +182,9 @@ Content-Length: 202
 
 {
  ""id_key"": 2
-}";
+}".Replace("\r\n",Environment.NewLine);
 
-            const string UnsuccessfulResponse =
+            static readonly string UnsuccessfulResponse =
 @"HTTP/1.1 404 Not Found
 Content-Type: application/json; charset=UTF-8
 Date: Thu, 14 Nov 2013 22:03:08 GMT
@@ -204,7 +204,8 @@ Content-Length: 202
   ""code"": 404,
   ""message"": ""Not Found""
  }
-}";
+}".Replace("\r\n",Environment.NewLine);
+
             bool successful2ndResponse;
             public BatchMessageHandler(bool successful2ndReponse = true)
             {
@@ -393,7 +394,7 @@ Content-Type: application/json; charset=utf-8
 Content-Length:  40
 
 {""etag_key"":""\""123\"""",""name_key"":""Name""}
-";
+".Replace("\r\n",Environment.NewLine);
             using (var service = new MockClientService("http://sample.com"))
             {
                 var request = new TestClientServiceRequest(service, new MockRequest
@@ -416,7 +417,7 @@ Content-Type: application/json
 Content-Length:  11
 
 hello world
-";
+".Replace("\r\n",Environment.NewLine);
             var request = new HttpRequestMessage(HttpMethod.Get, "http://test.com:2020");
             request.Content = new StringContent("hello world");
             request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
