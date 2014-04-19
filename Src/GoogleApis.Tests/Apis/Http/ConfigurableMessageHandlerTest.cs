@@ -675,7 +675,7 @@ namespace Google.Apis.Tests.Apis.Http
                 catch (AggregateException ae)
                 {
                     Assert.True(throwException);
-                    Assert.That(ae.InnerException.Message, Is.EqualTo(handler.Exception.Message));
+                    Assert.That(ae.InnerException.GetType().FullName, Is.EqualTo(handler.Exception.GetType().FullName));
                 }
 
                 Assert.That(boHandler.Waits.Count, Is.EqualTo(boHandleCount));
