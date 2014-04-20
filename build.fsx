@@ -10,6 +10,7 @@
 #r "FakeLib.dll"
 
 open Fake
+open Fake.BuildServerHelper
 
 let projFiles =
   !! "./Src/**/GoogleApis.Core.csproj" //Core First
@@ -20,6 +21,11 @@ let projFiles =
                     incl //Remove WinRT and Phone from Mono Builds
                     -- "./Src/**/*.WinRT.csproj"
                     -- "./Src/**/*.WP.csproj"
+                  else
+                    incl)
+  |> (fun incl -> if buildServer = BuildServer.AppVeyor then
+                    incl //Windows Server 2012 can't build WinRT
+                    -- "./Src/**/*.WinRT.csproj"
                   else
                     incl)
 
