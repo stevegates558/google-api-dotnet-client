@@ -226,6 +226,8 @@ Content-Length: 202
                     Replace("\"", "");
                 var expectedContent = ExpectedContentMessage.Replace("BOUNDARY", boundary);
                 var actuallContent = request.Content.ReadAsStringAsync().Result;
+                //BCL MultipartContent doesn't use Enviornment NewLine
+                actuallContent = actuallContent.Replace("\r\n", Environment.NewLine);
                 Assert.That(actuallContent, Is.EqualTo(expectedContent));
 
                 #endregion
@@ -372,6 +374,8 @@ Content-Length: 202
 
                 var content = BatchRequest.CreateOuterRequestContent(new[] { request1, request2 }).Result;
                 var requestStr = content.ReadAsStringAsync().Result;
+                //BCL MultipartContent doesn't use Enviornment NewLine
+                requestStr = requestStr.Replace("\r\n", Environment.NewLine);
 
                 // Read the boundary.
                 string boundary = null;
