@@ -215,6 +215,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+#xamarin
+*.userprefs
 
 #Project specifc
 

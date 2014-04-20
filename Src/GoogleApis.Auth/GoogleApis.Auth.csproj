@@ -16,6 +16,8 @@
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleApis.Core\GoogleApis.Core.csproj">
-      <Project>{db18f3a6-b16a-477b-a7b1-c2b116d1bfb0}</Project>
+      <Project>{DB18F3A6-B16A-477B-A7B1-C2B116D1BFB0}</Project>
       <Name>GoogleApis.Core</Name>
     </ProjectReference>
   </ItemGroup>

@@ -51,69 +51,55 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.16\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.16\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.16\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http, Version=2.1.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.WebRequest, Version=2.1.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime">
       <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Zlib.Portable">
       <HintPath>..\..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -144,15 +130,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GoogleApis.Core\GoogleApis.Core.csproj">
-      <Project>{db18f3a6-b16a-477b-a7b1-c2b116d1bfb0}</Project>
+      <Project>{DB18F3A6-B16A-477B-A7B1-C2B116D1BFB0}</Project>
       <Name>GoogleApis.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\GoogleApis.DotNet4\GoogleApis.DotNet4.csproj">
-      <Project>{c4da0abe-2c2e-4bb8-9881-5ff80b0c1afd}</Project>
+      <Project>{C4DA0ABE-2C2E-4BB8-9881-5FF80B0C1AFD}</Project>
       <Name>GoogleApis.DotNet4</Name>
     </ProjectReference>
     <ProjectReference Include="..\GoogleApis\GoogleApis.csproj">
-      <Project>{826cf988-eee8-4b75-8f53-b7e851a17baa}</Project>
+      <Project>{826CF988-EEE8-4B75-8F53-B7E851A17BAA}</Project>
       <Name>GoogleApis</Name>
     </ProjectReference>
   </ItemGroup>
